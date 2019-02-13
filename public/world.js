@@ -20,6 +20,10 @@ class World {
     }, 1000 / this.tickBase, this);
     this.draw();
   }
+  
+  shuffle() {
+    shuffleBehaviour();
+  }
 
   resize() {
     let realSize = this.canvas.getBoundingClientRect();
@@ -73,7 +77,15 @@ World.prototype.frictionCoefficient = 0.1;
 
 window.debugTime = 0;
 
-let world = new World("world", 250, 35);
+let world = new World("world", 350, 35);
 window.addEventListener("resize", () => {
   world.resize();
 })
+
+window.onkeyup = function(e) {
+   var key = e.keyCode ? e.keyCode : e.which;
+  
+   if (key == 83) {
+      world.shuffle();
+   }
+}

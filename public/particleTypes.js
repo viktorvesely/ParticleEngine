@@ -136,7 +136,7 @@ const ParticleTypes = [
     color: "#ff00f6",
     radius: 5,
     frictionModificator: 1, 
-    forceRadius: 300,
+    forceRadius: 100,
     maxForce: 0.7,
     behaviour: [
       {
@@ -158,7 +158,7 @@ const ParticleTypes = [
     color: "black",
     radius: 5,
     frictionModificator: 1, 
-    forceRadius: 300,
+    forceRadius: 200,
     maxForce: 0.8,
     behaviour: [
       {
@@ -180,6 +180,8 @@ const ParticleTypes = [
 
 function shuffleBehaviour() {
   ParticleTypes.forEach(type => {
+    type.forceRadius = Math.random() * 200 + 100;
+    type.maxForce = Math.random() * 1.1;
     type.behaviour = [];
     ParticleTypes.forEach(target=> {
       if (Math.floor(Math.random() * 8) % 9 === 0) {
