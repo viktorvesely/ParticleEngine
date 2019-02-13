@@ -57,7 +57,7 @@ const ParticleTypes = [
     radius: 4,
     frictionModificator: 0.5,
     forceRadius: 800,
-    maxForce: 0.2,
+    maxForce: 0.3,
     behaviour: [
       {
         name: "all",
@@ -71,7 +71,7 @@ const ParticleTypes = [
     radius: 6,
     frictionModificator: 1, 
     forceRadius: 180,
-    maxForce: 0.9,
+    maxForce: 0.8,
     behaviour: [
       {
         name: "yellow",
@@ -130,6 +130,50 @@ const ParticleTypes = [
         forceModificator: -1
       }
     ]
+  },
+  {
+    name: "pink",
+    color: "#ff00f6",
+    radius: 5,
+    frictionModificator: 1, 
+    forceRadius: 300,
+    maxForce: 0.7,
+    behaviour: [
+      {
+        name: "yellow",
+        forceModificator: 1
+      },
+      {
+        name: "orange",
+        forceModificator: -0.4
+      },
+      {
+        name: "purple",
+        forceModificator: -1
+      }
+    ]
+  },
+  {
+    name: "black",
+    color: "black",
+    radius: 5,
+    frictionModificator: 1, 
+    forceRadius: 300,
+    maxForce: 0.8,
+    behaviour: [
+      {
+        name: "yellow",
+        forceModificator: 1
+      },
+      {
+        name: "orange",
+        forceModificator: -0.4
+      },
+      {
+        name: "purple",
+        forceModificator: -1
+      }
+    ]
   }
 ]
 
@@ -138,13 +182,17 @@ function shuffleBehaviour() {
   ParticleTypes.forEach(type => {
     type.behaviour = [];
     ParticleTypes.forEach(target=> {
-      if (Math.floor(Math.random() * 3) % 4 === 0) {
+      if (Math.floor(Math.random() * 8) % 9 === 0) {
         return;
       }
       type.behaviour.push({
         name: target.name,
-        forceModificator: Math.random() * 4 - 2
+        forceModificator: Math.random() * 3.5 - 2
       })
     })
   });
+}
+
+function exportBehaviour() {
+  console.log(JSON.stringify(ParticleTypes));
 }
