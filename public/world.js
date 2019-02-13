@@ -6,10 +6,12 @@ class World {
     this.ctx = this.canvas.getContext("2d");
     this.maxLines = Math.floor(this.canvas.height / this.lineSize);
     this.particlesOffset = this.canvas.width / this.nParticlesPerLine;
+    this.shouldDraw = true;
     
     this.tickBase = tickBase;
     this.particles = [];
     
+    window.wrapWorld = true;
     shuffleBehaviour();
     this.initPopulation(nParticles);
 
@@ -23,6 +25,11 @@ class World {
   
   shuffle() {
     shuffleBehaviour();
+  }
+  
+  destroy() {
+    clearInterval(this.interval);
+    this.shouldDraw = false;
   }
 
   resize() {
@@ -62,6 +69,7 @@ class World {
   }
 
   draw() {
+    if (!this.shouldDraw) { return; }
     requestAnimationFrame(() => {
       this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height);
       this.ctx.beginPath();
@@ -80,8 +88,9 @@ World.prototype.lineSize = 40;
 World.prototype.frictionCoefficient = 0.1;
 
 window.debugTime = 0;
+window.nPopulation = 260;
 
-let world = new World("world", 380, 35);
+let world = new World("world", window.nPopulation, 35);
 window.addEventListener("resize", () => {
   world.resize();
 })
@@ -90,8 +99,16 @@ window.onkeyup = function(e) {
    var key = e.keyCode ? e.keyCode : e.which;
   
    if (key == 83) {
-      world.shuffle();
+    world.shuffle();
    } else if (key == 87) {
      world.wrap();
-   } 
+   } else if (key == 38) {
+     world.destroy();
+     window.nPopulation += 20;
+     world = new World("world", window.nPopulation, 35);
+   } else if (key == 40) {
+     world.destroy();
+     window.nPopulation -= 20;
+     world = new World("world", window.nPopulation, 35);
+   }
 }
