@@ -30,6 +30,10 @@ class World {
     this.canvas.width = realSize.width;
     this.canvas.height = realSize.height;
   }
+  
+  wrap() {
+    window.wrapWorld = !window.wrapWorld;
+  }
 
   initPopulation(nParticles) {
     let finalPopulationSize = nParticles
@@ -87,5 +91,7 @@ window.onkeyup = function(e) {
   
    if (key == 83) {
       world.shuffle();
-   }
+   } else if (key == 87) {
+     world.wrap();
+   } 
 }
