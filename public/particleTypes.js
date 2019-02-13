@@ -180,11 +180,11 @@ const ParticleTypes = [
 
 function shuffleBehaviour() {
   ParticleTypes.forEach(type => {
-    type.forceRadius = Math.random() * 200 + 100;
+    type.forceRadius = Math.random() * 200 + 80;
     type.maxForce = Math.random() * 1.1;
     type.behaviour = [];
     ParticleTypes.forEach(target=> {
-      if (Math.floor(Math.random() * 8) % 9 === 0) {
+      if (Math.floor(Math.random() * 6) % 7 === 0) {
         return;
       }
       type.behaviour.push({

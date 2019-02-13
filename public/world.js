@@ -81,7 +81,7 @@ World.prototype.frictionCoefficient = 0.1;
 
 window.debugTime = 0;
 
-let world = new World("world", 350, 35);
+let world = new World("world", 380, 35);
 window.addEventListener("resize", () => {
   world.resize();
 })

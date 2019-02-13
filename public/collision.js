@@ -34,41 +34,33 @@ class CollisionManager {
     let radius = particle.type.radius;
     if (window.wrapWorld) {
       if (x <= -radius) {
-        particle.pos.x = canvas.width - radius - 1;
+        particle.pos.x = canvas.width + radius;
+      } else if (x >= canvas.width - radius) {
+        particle.pos.x = -radius;
+      }
+      
+      if (y <= -radius) {
+        particle.pos.y = canvas.height + radius;  
+      } else if (y >= canvas.height - radius) {
+        particle.pos.y = -radius;
       }
     } else {
-    
-    }
-    if (x <= radius) {
-      if (window.wrapWorld) {
-        particle.pos.x = canvas.width - radius - 1;
-      } else { 
+      if (x <= radius) {
         particle.pos.x = radius;
-        particle.speed.x = -particle.speed.x;
-      }    
-    } else if (x >= canvas.width - radius) {
-      if (window.wrapWorld) {
-        particle.pos.x = radius + 1;
-      } else {
+        particle.speed.x = -particle.speed.x;    
+      } else if (x >= canvas.width - radius) {
         particle.pos.x = canvas.width - radius;
         particle.speed.x = -particle.speed.x;
       }
-    } 
-    if (y <= radius) {
-      if (window.wrapWorld) {
-        particle.pos.y = canvas.height - radius - 1;
-      } else {
+      
+      if (y <= radius) {
         particle.pos.y = radius;
         particle.speed.y = -particle.speed.y;
-      }
-    } else if (y >= canvas.height - radius) {
-      if (window.wrapWorld) {
-        particle.pos.y = radius + 1;
-      } else {
+      } else if (y >= canvas.height - radius) {
         particle.pos.y = canvas.height - radius;
         particle.speed.y = -particle.speed.y;
       }
-    }
+    } 
   }
 
   collide() {
