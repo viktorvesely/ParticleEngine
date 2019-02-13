@@ -88,7 +88,7 @@ World.prototype.lineSize = 40;
 World.prototype.frictionCoefficient = 0.1;
 
 window.debugTime = 0;
-window.nPopulation = 260;
+window.nPopulation = 230;
 
 let world = new World("world", window.nPopulation, 35);
 window.addEventListener("resize", () => {
