@@ -12,7 +12,7 @@ class World {
     this.tickBase = tickBase;
     this.particles = [];
         
-    this.switchBehaviour(mode);
+    this.switchMode(mode);
     
     window.wrapWorld = true;
     this.initPopulation(nParticles);
@@ -25,16 +25,16 @@ class World {
     this.draw();
   }
   
-  switchBehaviour(mode) {
+  switchMode (mode) {
     switch (mode) {
       case "BEHAVIOUR":
-        this.mode = mode;
+        this.mode = this.MODE_BEHAVIOUR;
         break;
       case "HOLLOW":
         this.mode = mode;
         break;
       default:
-        this.mode = "BEHAVIOUR";
+        this.mode = this.MODE_HOLLOW;
         break;
     }
   }
@@ -68,7 +68,7 @@ class World {
       let currentLine = Math.floor(i / this.nParticlesPerLine) + 1;
       let currentIndex = i % this.nParticlesPerLine;
       let currentXPos = (currentIndex * this.particlesOffset) + (this.particlesOffset / 2);
-      this.particles.push(new Particle(new Vector(currentXPos , currentLine * this.lineSize), this.particles.length));
+      this.particles.push(new Particle(new Vector(currentXPos , currentLine * this.lineSize), this.particles.length, this.behaviour));
     }
   }
 
@@ -80,7 +80,9 @@ class World {
         .multiply(this.frictionCoefficient)
         .multiply(particle.type.frictionModificator);
       particle.speed.add(friction);
-      particle.behave(this.particles);
+      if (this.mode = this.MODE_BEHAVIOUR) {
+        particle.behave(this.particles);
+      }
       particle.pos.add(particle.speed);
     });
   }
@@ -103,7 +105,8 @@ class World {
 World.prototype.nParticlesPerLine = 20;
 World.prototype.lineSize = 40;
 World.prototype.frictionCoefficient = 0.1;
-World.prototype.BEHAVIOUR
+World.prototype.MODE_BEHAVIOUR = 0;
+World.prototype.MODE_HOLLOW = 1;
 
 window.debugTime = 0;
 window.nPopulation = 230;
@@ -114,19 +117,24 @@ window.addEventListener("resize", () => {
 })
 
 window.onkeyup = function(e) {
-   var key = e.keyCode ? e.keyCode : e.which;
+  var key = e.keyCode ? e.keyCode : e.which;
   
-   if (key == 83) {
+  if (key == 83) { // S
     world.shuffleBehaviour();
-   } else if (key == 87) {
-     world.wrap();
-   } else if (key == 38) {
-     world.destroy();
-     window.nPopulation += 20;
-     world = new World("world", window.nPopulation, 35);
-   } else if (key == 40) {
-     world.destroy();
-     window.nPopulation -= 20;
-     world = new World("world", window.nPopulation, 35);
-   }
+  } else if (key == 87) { // W
+    world.wrap();
+  } else if (key == 38) { // KEY_UP
+    world.destroy();
+    window.nPopulation += 20;
+    world = new World("world", window.nPopulation, 35);
+  } else if (key == 40) { // KEY_DOWN
+    world.destroy();
+    window.nPopulation -= 20;
+    world = new World("world", window.nPopulation, 35);
+  } else if (key == 49) { // 1
+    world.switchMode("BEHAVIOUR");
+  }
+  else if (key == 50) { // 2
+    world.switchMode("HOLLOW");
+  }
 }

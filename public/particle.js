@@ -1,11 +1,11 @@
 const R_SMOOTH = 1000.0;
 
 class Particle {
-  constructor(pos, id) {
+  constructor(pos, id, behaviours) {
     this.pos = pos;
     this.speed = new Vector(0, 0);
     this.id = id;  
-    this.type  = ParticleTypes[Math.floor(Math.random() * ParticleTypes.length)];
+    this.type  = behaviours.types[Math.floor(Math.random() * behaviours.type.length)];
 
   }
 
@@ -22,7 +22,7 @@ class Particle {
         let repelentForce = delta.clone().divide(deltaLength).multiply(R_SMOOTH * minR * (1.0 / (minR + R_SMOOTH) - 1.0 / (deltaLength + R_SMOOTH)));
         // let repelentMagnitude = Math.pow(this.repelent_, -deltaLength + this.repelent_b);
         // let repelentForce = delta.clone().divide(deltaLength).multiply(repelentMagnitude);
-        // particle.speed.add(repelentForce);
+        // particle.speed.add(repelentForce);1
         this.speed.add(repelentForce);
       } else {
         let behaviour = behaviours.find(behaviour => {
