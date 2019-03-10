@@ -81,7 +81,9 @@ class World {
         .multiply(particle.type.frictionModificator);
       particle.speed.add(friction);
       particle.behave(this.particles, this.mode, this.MODE);
-      particle.addForce
+      if (this.mode === this.MODE.HOLLOW) {
+        particle.addForce(new Vector(500, 250).subtract(particle.pos).unit().multiply(1.4));
+      }
       particle.pos.add(particle.speed);
     });
   }
