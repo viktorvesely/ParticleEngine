@@ -184,33 +184,30 @@ class Behaviour {
   }
     
   shuffleBehaviour() {
-
+    ParticleTypes.forEach(type => {
+      type.forceRadius = Math.random() * 200 + 80;
+      type.maxForce = Math.random() * 1.1;
+      type.behaviour = [];
+      ParticleTypes.forEach(target=> {
+        if (Math.floor(Math.random() * 6) % 7 === 0) {
+          return;
+        }
+        type.behaviour.push({
+          name: target.name,
+          forceModificator: Math.random() * 3.5 - 2
+        })
+      })
+      return ParticleTypes;
+    });
   }
     
   exportBehaviour() {
-  
+    window.behaviour = this.types;
+    let items = JSON.parse(localStorage.getItem("saved_behaviours")) || [];
+    items.push(this.types);
+    localStorage.setItem(items);
+    console.log("The behaviour is stored in 'behaviour' variable and in localStorage");
   }
   
-}
-
-
-function shuffleBehaviour() {
-  ParticleTypes.forEach(type => {
-    type.forceRadius = Math.random() * 200 + 80;
-    type.maxForce = Math.random() * 1.1;
-    type.behaviour = [];
-    ParticleTypes.forEach(target=> {
-      if (Math.floor(Math.random() * 6) % 7 === 0) {
-        return;
-      }
-      type.behaviour.push({
-        name: target.name,
-        forceModificator: Math.random() * 3.5 - 2
-      })
-    })
-  });
-}
-
-function exportBehaviour() {
-  console.log(JSON.stringify(ParticleTypes));
+  
 }
