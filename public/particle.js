@@ -5,7 +5,7 @@ class Particle {
     this.pos = pos;
     this.speed = new Vector(0, 0);
     this.id = id;  
-    this.type  = behaviours.types[Math.floor(Math.random() * behaviours.type.length)];
+    this.type  = behaviours.types[Math.floor(Math.random() * behaviours.types.length)];
 
   }
 

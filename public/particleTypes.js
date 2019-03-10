@@ -197,8 +197,8 @@ class Behaviour {
           forceModificator: Math.random() * 3.5 - 2
         })
       })
-      return ParticleTypes;
     });
+    return ParticleTypes;
   }
     
   exportBehaviour() {

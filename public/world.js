@@ -31,10 +31,10 @@ class World {
         this.mode = this.MODE_BEHAVIOUR;
         break;
       case "HOLLOW":
-        this.mode = mode;
+        this.mode = this.MODE_HOLLOW;
         break;
       default:
-        this.mode = this.MODE_HOLLOW;
+        this.mode = this.MODE_BEHAVIOUR;
         break;
     }
   }
@@ -80,7 +80,7 @@ class World {
         .multiply(this.frictionCoefficient)
         .multiply(particle.type.frictionModificator);
       particle.speed.add(friction);
-      if (this.mode = this.MODE_BEHAVIOUR) {
+      if (this.mode === this.MODE_BEHAVIOUR) {
         particle.behave(this.particles);
       }
       particle.pos.add(particle.speed);
