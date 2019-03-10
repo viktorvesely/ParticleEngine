@@ -1,6 +1,6 @@
 class World {
 
-  constructor(id, nParticles, tickBase=60) {
+  constructor(id, nParticles, mode="BEHAVIOUR", tickBase=60) {
     this.canvas = document.getElementById(id);
     this.resize();
     this.ctx = this.canvas.getContext("2d");

@@ -1,3 +1,4 @@
+
 const ParticleTypes = [
   {
     name: "blue",
@@ -176,6 +177,21 @@ const ParticleTypes = [
     ]
   }
 ]
+
+class Behaviour {
+  constructor() {
+    this.types = this.shuffleBehaviour();
+  }
+    
+  shuffleBehaviour() {
+
+  }
+    
+  exportBehaviour() {
+  
+  }
+  
+}
 
 
 function shuffleBehaviour() {
