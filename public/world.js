@@ -28,13 +28,13 @@ class World {
   switchMode (mode) {
     switch (mode) {
       case "BEHAVIOUR":
-        this.mode = this.MODE_BEHAVIOUR;
+        this.mode = this.MODE.BEHAVIOUR;
         break;
       case "HOLLOW":
-        this.mode = this.MODE_HOLLOW;
+        this.mode = this.MODE.HOLLOW;
         break;
       default:
-        this.mode = this.MODE_BEHAVIOUR;
+        this.mode = this.MODE.BEHAVIOUR;
         break;
     }
   }
@@ -80,9 +80,8 @@ class World {
         .multiply(this.frictionCoefficient)
         .multiply(particle.type.frictionModificator);
       particle.speed.add(friction);
-      if (this.mode === this.MODE_BEHAVIOUR) {
-        particle.behave(this.particles);
-      }
+      particle.behave(this.particles, this.mode, this.MODE);
+      particle.addForce
       particle.pos.add(particle.speed);
     });
   }
@@ -105,8 +104,9 @@ class World {
 World.prototype.nParticlesPerLine = 20;
 World.prototype.lineSize = 40;
 World.prototype.frictionCoefficient = 0.1;
-World.prototype.MODE_BEHAVIOUR = 0;
-World.prototype.MODE_HOLLOW = 1;
+World.prototype.MODE = {};
+World.prototype.MODE.BEHAVIOUR = 0;
+World.prototype.MODE.HOLLOW = 1;
 
 window.debugTime = 0;
 window.nPopulation = 230;

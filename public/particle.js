@@ -8,9 +8,13 @@ class Particle {
     this.type  = behaviours.types[Math.floor(Math.random() * behaviours.types.length)];
 
   }
+  
+  addForce(force) {
+    this.speed.add(force);
+  }
 
 
-  behave(particles) {
+  behave(particles, currentMode, MODE) {
     particles.forEach(particle => {
       let behaviours = this.type.behaviour;
       if (this.id === particle.id) return;
@@ -24,7 +28,7 @@ class Particle {
         // let repelentForce = delta.clone().divide(deltaLength).multiply(repelentMagnitude);
         // particle.speed.add(repelentForce);1
         this.speed.add(repelentForce);
-      } else {
+      } else if (currentMode === MODE.BEHAVIOUR) {
         let behaviour = behaviours.find(behaviour => {
           return behaviour.name === "all" || behaviour.name === particle.type.name;
         });
