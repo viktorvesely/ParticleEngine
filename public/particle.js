@@ -38,7 +38,6 @@ class Particle {
         particle.speed.add(force);
       }
     });
-    this.pos.add(this.speed);
   }
 
   draw(ctx) {

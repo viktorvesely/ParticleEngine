@@ -8,11 +8,13 @@ class World {
     this.particlesOffset = this.canvas.width / this.nParticlesPerLine;
     this.shouldDraw = true;
     
+    this.behaviour = new Behaviour();
     this.tickBase = tickBase;
     this.particles = [];
+        
+    this.switchBehaviour(mode);
     
     window.wrapWorld = true;
-    shuffleBehaviour();
     this.initPopulation(nParticles);
 
     this.collision = new CollisionManager(this.particles, this.canvas);
@@ -23,8 +25,22 @@ class World {
     this.draw();
   }
   
-  shuffle() {
-    shuffleBehaviour();
+  switchBehaviour(mode) {
+    switch (mode) {
+      case "BEHAVIOUR":
+        this.mode = mode;
+        break;
+      case "HOLLOW":
+        this.mode = mode;
+        break;
+      default:
+        this.mode = "BEHAVIOUR";
+        break;
+    }
+  }
+  
+  shuffleBehaviour () {
+    this.behaviour.shuffleBehaviour();
   }
   
   destroy() {
@@ -65,6 +81,7 @@ class World {
         .multiply(particle.type.frictionModificator);
       particle.speed.add(friction);
       particle.behave(this.particles);
+      particle.pos.add(particle.speed);
     });
   }
 
@@ -86,6 +103,7 @@ class World {
 World.prototype.nParticlesPerLine = 20;
 World.prototype.lineSize = 40;
 World.prototype.frictionCoefficient = 0.1;
+World.prototype.BEHAVIOUR
 
 window.debugTime = 0;
 window.nPopulation = 230;
@@ -99,7 +117,7 @@ window.onkeyup = function(e) {
    var key = e.keyCode ? e.keyCode : e.which;
   
    if (key == 83) {
-    world.shuffle();
+    world.shuffleBehaviour();
    } else if (key == 87) {
      world.wrap();
    } else if (key == 38) {
