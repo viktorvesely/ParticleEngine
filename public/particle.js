@@ -46,11 +46,21 @@ class Particle {
         const denom = this.type.forceRadius - minR;
         let force = delta.clone().divide(deltaLength).multiply(this.type.maxForce * (1.0 - numer / denom)).multiply(behaviour.forceModificator);
         particle.speed.add(force);
-      } else if (currentMode === MODE.FOLLOW) {
-        let speed = this.follow.clone().subtract(this.pos).unit().multiply(1.4);
-        this.speed.add(speed);
       }
     });
+    if (currentMode === MODE.FOLLOW) {
+      if (this.follow === null) return; 
+      let distance = this.follow.clone().subtract(this.pos)
+      let length = distance.length();
+      if (length > 6) {
+        let speed = distance.divide(length).multiply(1);
+        this.speed.add(speed);
+      } else {
+        if (this.permanent) {
+          this.follow = null;
+        }
+      }
+    }
   }
 
   draw(ctx) {

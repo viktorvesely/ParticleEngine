@@ -16,7 +16,7 @@ class World {
     
     window.wrapWorld = true;
     this.initPopulation(nParticles);
-    
+    this.particles[0].goTo(new Vector(700, 400));
 
     this.collision = new CollisionManager(this.particles, this.canvas);
     
