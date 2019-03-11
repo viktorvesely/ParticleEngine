@@ -16,6 +16,7 @@ class World {
     
     window.wrapWorld = true;
     this.initPopulation(nParticles);
+    
 
     this.collision = new CollisionManager(this.particles, this.canvas);
     

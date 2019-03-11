@@ -15,7 +15,6 @@ class Particle {
     this.speed.add(force);
   }
 
-  
   goTo(pos, permanent=true) {
     this.follow = pos;
     this.permament = permanent;
@@ -47,6 +46,9 @@ class Particle {
         const denom = this.type.forceRadius - minR;
         let force = delta.clone().divide(deltaLength).multiply(this.type.maxForce * (1.0 - numer / denom)).multiply(behaviour.forceModificator);
         particle.speed.add(force);
+      } else if (currentMode === MODE.FOLLOW) {
+        let speed = this.follow.clone().subtract(this.pos).unit().multiply(1.4);
+        this.speed.add(speed);
       }
     });
   }
