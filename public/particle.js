@@ -17,7 +17,7 @@ class Particle {
 
   goTo(pos, permanent=true) {
     this.follow = pos;
-    this.permament = permanent;
+    this.permanent = permanent;
   }
 
   behave(particles, currentMode, MODE) {
@@ -56,7 +56,7 @@ class Particle {
         let speed = distance.divide(length).multiply(1);
         this.speed.add(speed);
       } else {
-        if (this.permanent) {
+        if (!this.permanent) {
           this.follow = null;
         }
       }
