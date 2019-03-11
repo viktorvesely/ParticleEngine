@@ -29,6 +29,7 @@ class World {
     let nMode = this.MODE[mode] || this.MODE.BEHAVIOUR;
     let nextFriction = this.FRICTION[nMode] || this.FRICTION[this.DEFAULT_FRICTION];
     this.frictionCoefficient = nextFriction;
+    this.mode = nMode;
   }
   
   shuffleBehaviour () {
@@ -73,9 +74,6 @@ class World {
         .multiply(particle.type.frictionModificator);
       particle.speed.add(friction);
       particle.behave(this.particles, this.mode, this.MODE);
-      if (this.mode === this.MODE.HOLLOW) {
-        particle.addForce(new Vector(500, 250).subtract(particle.pos).unit().multiply(1.4));
-      }
       particle.pos.add(particle.speed);
     });
   }
@@ -111,7 +109,7 @@ World.prototype.FRICTION[World.prototype.MODE.HOLLOW] = 0.04;
 window.debugTime = 0;
 window.nPopulation = 230;
 
-let world = new World("world", window.nPopulation, 35);
+let world = new World("world", window.nPopulation, "BEHAVIOUR" , 50);
 window.addEventListener("resize", () => {
   world.resize();
 })
@@ -126,11 +124,11 @@ window.onkeyup = function(e) {
   } else if (key == 38) { // KEY_UP
     world.destroy();
     window.nPopulation += 20;
-    world = new World("world", window.nPopulation, 35);
+    world = new World("world", window.nPopulation, "BEHAVIOUR" , 50);
   } else if (key == 40) { // KEY_DOWN
     world.destroy();
     window.nPopulation -= 20;
-    world = new World("world", window.nPopulation, 35);
+    world = new World("world", window.nPopulation, "BEHAVIOUR" , 50);
   } else if (key == 49) { // 1
     world.switchMode("BEHAVIOUR");
   }
