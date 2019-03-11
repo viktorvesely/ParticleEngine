@@ -26,17 +26,9 @@ class World {
   }
   
   switchMode (mode) {
-    switch (mode) {
-      case "BEHAVIOUR":
-        this.mode = this.MODE.BEHAVIOUR;
-        break;
-      case "HOLLOW":
-        this.mode = this.MODE.HOLLOW;
-        break;
-      default:
-        this.mode = this.MODE.BEHAVIOUR;
-        break;
-    }
+    let nMode = this.MODE[mode] || this.MODE.BEHAVIOUR;
+    let nextFriction = this.FRICTION[nMode] || this.FRICTION[this.DEFAULT_FRICTION];
+    this.frictionCoefficient = nextFriction;
   }
   
   shuffleBehaviour () {
@@ -107,8 +99,14 @@ World.prototype.nParticlesPerLine = 20;
 World.prototype.lineSize = 40;
 World.prototype.frictionCoefficient = 0.1;
 World.prototype.MODE = {};
+World.prototype.FRICTION = [];
 World.prototype.MODE.BEHAVIOUR = 0;
 World.prototype.MODE.HOLLOW = 1;
+World.prototype.MODE.FOLLOW = 2;
+World.prototype.DEFAULT_FRICTION = -1;
+World.prototype.FRICTION[World.prototype.DEFAULT_FRICTION] = 0.1;
+World.prototype.FRICTION[World.prototype.MODE.HOLLOW] = 0.04;
+
 
 window.debugTime = 0;
 window.nPopulation = 230;
@@ -138,5 +136,8 @@ window.onkeyup = function(e) {
   }
   else if (key == 50) { // 2
     world.switchMode("HOLLOW");
+  }
+  else if (key == 51) { // 3
+    world.switchMode("FOLLOW");
   }
 }

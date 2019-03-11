@@ -6,13 +6,20 @@ class Particle {
     this.speed = new Vector(0, 0);
     this.id = id;  
     this.type  = behaviours.types[Math.floor(Math.random() * behaviours.types.length)];
-
+    this.follow = null;
+    this.permanent = false;
+    
   }
   
   addForce(force) {
     this.speed.add(force);
   }
 
+  
+  goTo(pos, permanent=true) {
+    this.follow = pos;
+    this.permament = permanent;
+  }
 
   behave(particles, currentMode, MODE) {
     particles.forEach(particle => {
