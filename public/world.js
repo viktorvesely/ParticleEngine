@@ -7,6 +7,7 @@ class World {
     this.maxLines = Math.floor(this.canvas.height / this.lineSize);
     this.particlesOffset = this.canvas.width / this.nParticlesPerLine;
     this.shouldDraw = true;
+    this.pause = false;
     
     this.behaviour = new Behaviour();
     this.tickBase = tickBase;
@@ -67,6 +68,7 @@ class World {
   }
 
   tick() {
+    if (this.pause) return;
     this.collision.collide();
     this.particles.forEach(particle => {
       let friction = new Vector(particle.speed)
@@ -107,10 +109,11 @@ World.prototype.FRICTION[World.prototype.DEFAULT_FRICTION] = 0.1;
 World.prototype.FRICTION[World.prototype.MODE.HOLLOW] = 0.04;
 
 
+window.tickBase = 60;
 window.debugTime = 0;
 window.nPopulation = 230;
 
-let world = new World("world", window.nPopulation, "BEHAVIOUR" , 50);
+let world = new World("world", window.nPopulation, "BEHAVIOUR" , window.tickBase);
 window.addEventListener("resize", () => {
   world.resize();
 })
@@ -125,18 +128,18 @@ window.onkeyup = function(e) {
   } else if (key == 38) { // KEY_UP
     world.destroy();
     window.nPopulation += 20;
-    world = new World("world", window.nPopulation, "BEHAVIOUR" , 50);
+    world = new World("world", window.nPopulation, "BEHAVIOUR" , window.tickBase);
   } else if (key == 40) { // KEY_DOWN
     world.destroy();
     window.nPopulation -= 20;
-    world = new World("world", window.nPopulation, "BEHAVIOUR" , 50);
+    world = new World("world", window.nPopulation, "BEHAVIOUR" , window.tickBase);
   } else if (key == 49) { // 1
     world.switchMode("BEHAVIOUR");
-  }
-  else if (key == 50) { // 2
+  } else if (key == 50) { // 2
     world.switchMode("HOLLOW");
-  }
-  else if (key == 51) { // 3
+  } else if (key == 51) { // 3
     world.switchMode("FOLLOW");
+  } else if (key == 80) { // P
+    world.pause = !world.pause;
   }
 }
