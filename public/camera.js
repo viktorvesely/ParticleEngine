@@ -31,14 +31,15 @@ class Camera {
   resize() {
     this.height = this.video.offsetHeight;
     this.width = this.video.offsetWidth;
+    this.canvas.height = this.height / 4;
+    this.canvas.width = this.width / 4;
   }
   
   capture() {
-    debugger;
     this.context.drawImage(this.video, 0, 0, this.width, this.height);
     let data = this.canvas.toDataURL('image/png');
-    var frame = new Image(this.width, this.height)
-    frame.src = data;
-    return frame;
+    //var frame = new Image(this.width, this.height)
+    //frame.src = data;
+    return data;
   }
 }

@@ -74,13 +74,9 @@ class World {
   tick(ticks) {
     if (this.pause) return;
     
-    if (ticks === 1000000) {
-      this.ticks = 0;
-      ticks = this.ticks;
-    }
-    ticks++;
+    if (ticks === 1000000) this.ticks = 0;
+    this.ticks++;
     
-    debugger
     if ((ticks - this.lastCameraUpdate) * this.ticksToTime >= this.camera.updateTime) {
       let frame = this.camera.capture();
       this.lastCameraUpdate = ticks;
