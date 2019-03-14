@@ -80,6 +80,7 @@ class World {
     }
     ticks++;
     
+    debugger
     if ((ticks - this.lastCameraUpdate) * this.ticksToTime >= this.camera.updateTime) {
       let frame = this.camera.capture();
       this.lastCameraUpdate = ticks;

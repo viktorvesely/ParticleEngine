@@ -34,6 +34,7 @@ class Camera {
   }
   
   capture() {
+    debugger;
     this.context.drawImage(this.video, 0, 0, this.width, this.height);
     let data = this.canvas.toDataURL('image/png');
     var frame = new Image(this.width, this.height)
