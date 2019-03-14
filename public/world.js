@@ -3,26 +3,27 @@ class World {
   constructor(id, nParticles, mode="BEHAVIOUR", tickBase=60) {
     this.canvas = document.getElementById(id);
     this.resize();
+    
     this.ctx = this.canvas.getContext("2d");
     this.maxLines = Math.floor(this.canvas.height / this.lineSize);
     this.particlesOffset = this.canvas.width / this.nParticlesPerLine;
     this.shouldDraw = true;
     this.pause = false;
+    this.tickBase = tickBase;
+    this.ticks = 0;
     
     this.behaviour = new Behaviour();
-    this.tickBase = tickBase;
     this.particles = [];
-        
     this.switchMode(mode);
-    
     window.wrapWorld = true;
     this.initPopulation(nParticles);
     this.particles[0].goTo(new Vector(700, 400));
 
+    this.camera = new Camera("camera", "supportCanvas");
     this.collision = new CollisionManager(this.particles, this.canvas);
     
     this.interval = setInterval(function(context) {
-      context.tick.call(context);
+      context.tick.call(context, context.ticks);
     }, 1000 / this.tickBase, this);
     this.draw();
   }
@@ -47,6 +48,7 @@ class World {
     let realSize = this.canvas.getBoundingClientRect();
     this.canvas.width = realSize.width;
     this.canvas.height = realSize.height;
+    this.camera.resize();
   }
   
   wrap() {
@@ -67,8 +69,11 @@ class World {
     }
   }
 
-  tick() {
+  tick(ticks) {
     if (this.pause) return;
+    if (ticks === ) {
+    
+    }
     this.collision.collide();
     this.particles.forEach(particle => {
       let friction = new Vector(particle.speed)
@@ -114,6 +119,8 @@ window.debugTime = 0;
 window.nPopulation = 230;
 
 let world = new World("world", window.nPopulation, "BEHAVIOUR" , window.tickBase);
+
+
 window.addEventListener("resize", () => {
   world.resize();
 })

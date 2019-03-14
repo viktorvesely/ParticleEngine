@@ -8,14 +8,8 @@ class Camera {
     this.video = document.getElementById(videoId);
     this.canvas = document.getElementById(canvasId);
     this.context = this.canvas.getContext('2d');
-  }
-  
-  resize() {
-    this.height = this.video.offsetHeight;
-    this.width = this.;
-  }
-  
-  capture(listener) {
+    
+    this.resize();
     
     this.video.addEventListener('canplay', ev => {
       if (!this.streaming) {
@@ -24,13 +18,22 @@ class Camera {
     }, false);
     
     navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false })
-        .then(stream => {
-            this.video.srcObject = stream;
-            this.video.play();
-        })
-        .catch(err => {
-            console.error(err);
-        });
+      .then(stream => {
+        this.video.srcObject = stream;
+        this.video.play();
+      })
+      .catch(err => {
+        console.error(err);
+    });
+    
+  }
+  
+  resize() {
+    this.height = this.video.offsetHeight;
+    this.width = this.video.offsetWidth;
+  }
+  
+  capture(listener) {
     
   }
 }
