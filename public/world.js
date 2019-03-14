@@ -2,7 +2,6 @@ class World {
 
   constructor(id, nParticles, mode="BEHAVIOUR", tickBase=60) {
     this.canvas = document.getElementById(id);
-    this.camera = new Camera("camera", "supportCanvas");
     this.lastCameraUpdate = 0;
     this.resize();
     
@@ -50,7 +49,6 @@ class World {
     let realSize = this.canvas.getBoundingClientRect();
     this.canvas.width = realSize.width;
     this.canvas.height = realSize.height;
-    this.camera.resize();
   }
   
   wrap() {
@@ -76,11 +74,6 @@ class World {
     
     if (ticks === 1000000) this.ticks = 0;
     this.ticks++;
-    
-    if ((ticks - this.lastCameraUpdate) * this.ticksToTime >= this.camera.updateTime) {
-      let frame = this.camera.capture();
-      this.lastCameraUpdate = ticks;
-    }
     
     this.collision.collide();
     

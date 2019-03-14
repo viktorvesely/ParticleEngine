@@ -31,8 +31,8 @@ class Camera {
   resize() {
     this.height = this.video.offsetHeight;
     this.width = this.video.offsetWidth;
-    this.canvas.height = this.height / 4;
-    this.canvas.width = this.width / 4;
+    this.canvas.height = this.height / 3;
+    this.canvas.width = this.width / 3;
   }
   
   capture() {
