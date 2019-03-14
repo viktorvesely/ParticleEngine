@@ -2,6 +2,8 @@ class World {
 
   constructor(id, nParticles, mode="BEHAVIOUR", tickBase=60) {
     this.canvas = document.getElementById(id);
+    this.camera = new Camera("camera", "supportCanvas");
+    this.lastCameraUpdate = 0;
     this.resize();
     
     this.ctx = this.canvas.getContext("2d");
@@ -11,6 +13,7 @@ class World {
     this.pause = false;
     this.tickBase = tickBase;
     this.ticks = 0;
+    this.ticksToTime = 1000 / tickBase;
     
     this.behaviour = new Behaviour();
     this.particles = [];
@@ -18,8 +21,7 @@ class World {
     window.wrapWorld = true;
     this.initPopulation(nParticles);
     this.particles[0].goTo(new Vector(700, 400));
-
-    this.camera = new Camera("camera", "supportCanvas");
+    
     this.collision = new CollisionManager(this.particles, this.canvas);
     
     this.interval = setInterval(function(context) {
@@ -71,10 +73,20 @@ class World {
 
   tick(ticks) {
     if (this.pause) return;
-    if (ticks === ) {
     
+    if (ticks === 1000000) {
+      this.ticks = 0;
+      ticks = this.ticks;
     }
+    ticks++;
+    
+    if ((ticks - this.lastCameraUpdate) * this.ticksToTime >= this.camera.updateTime) {
+      let frame = this.camera.capture();
+      this.lastCameraUpdate = ticks;
+    }
+    
     this.collision.collide();
+    
     this.particles.forEach(particle => {
       let friction = new Vector(particle.speed)
         .negative()

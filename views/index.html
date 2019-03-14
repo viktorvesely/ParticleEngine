@@ -2,12 +2,13 @@
 <body style="margin: 0;">
   <canvas id="world" style="height:100%; width: 100%;">
   </canvas>
-  <video id="camera" style="position:absolute;top:0;right:0;height:100%;width:100%;visibility:hidden;"></video>
-  <canvas id="supportCanvas" style="position:absolute;top:0;right:0;height:100%;width:100%;visibility:hidden;"></canvas>
+  <video id="camera" style="position:absolute;top:0;right:0;height:100%;width:100%;visibility:hidden;filter:grayscale();"></video>
+  <canvas id="supportCanvas" style="position:absolute;top:0;right:0;height:100%;width:100%;opacity:0.2;"></canvas>
   <script src="./vector.js"></script>
   <script src="./particleTypes.js"></script>
   <script src="./particle.js"></script>
   <script src="./collision.js"></script>
+  <script src="./canny.js"></script>
   <script src="./camera.js"></script>
   <script src="./world.js"></script>
 </body>

@@ -1,9 +1,9 @@
 class Camera {
   constructor(videoId, canvasId) {
     this.streaming = false;
-    this.photo = null;
     this.height = 0;
     this.width = 0;
+    this.updateTime = 110;
     
     this.video = document.getElementById(videoId);
     this.canvas = document.getElementById(canvasId);
@@ -33,7 +33,11 @@ class Camera {
     this.width = this.video.offsetWidth;
   }
   
-  capture(listener) {
-    
+  capture() {
+    this.context.drawImage(this.video, 0, 0, this.width, this.height);
+    let data = this.canvas.toDataURL('image/png');
+    var frame = new Image(this.width, this.height)
+    frame.src = data;
+    return frame;
   }
 }
