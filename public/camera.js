@@ -2,22 +2,24 @@ class Camera {
   constructor(videoId, canvasId) {
     this.streaming = false;
     this.photo = null;
+    this.height = 0;
+    this.width = 0;
     
     this.video = document.getElementById(videoId);
     this.canvas = document.getElementById(canvasId);
+    this.context = this.canvas.getContext('2d');
+  }
+  
+  resize() {
+    this.height = this.video.offsetHeight;
+    this.width = this.;
   }
   
   capture(listener) {
     
     this.video.addEventListener('canplay', ev => {
       if (!this.streaming) {
-        height = video.videoHeight / (video.videoWidth/width);
-
-        video.setAttribute('width', width);
-        video.setAttribute('height', height);
-        canvas.setAttribute('width', width);
-        canvas.setAttribute('height', height);
-        streaming = true;
+        this.streaming = true;
       }
     }, false);
     
