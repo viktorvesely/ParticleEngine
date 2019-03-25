@@ -103,8 +103,8 @@ class World {
   }
 }
 
-World.prototype.nParticlesPerLine = 20;
-World.prototype.lineSize = 40;
+World.prototype.nParticlesPerLine = 30;
+World.prototype.lineSize = 35;
 World.prototype.frictionCoefficient = 0.1;
 World.prototype.MODE = {};
 World.prototype.FRICTION = [];

@@ -66,33 +66,6 @@ class CollisionManager {
   collide() {
     for (let i = 0; i < this.particles.length; ++i) {
       let collider = this.particles[i];
-
-      // for (let z = 0; z < this.particles.length; ++z) {
-      //   let collidee = this.particles[z];
-      //   if (collider.id === collidee.id) continue;
-      //   if (this.checkPair(collidee.id, collider.id)) continue;
-      //   let colliderPredict = new Vector(collider.pos).add(collider.speed);
-      //   let collideePredict = new Vector(collidee.pos).add(collidee.speed);
-      //   let delta = new Vector(collideePredict).subtract(colliderPredict);
-      //   let minimalDistance = collider.type.radius + collidee.type.radius + this.particlesOffset;
-      //   if (delta.length() <= minimalDistance) {
-      //     let normal = new Vector(-delta.y, delta.x).unit();
-      //     delta.unit();
-
-      //     let erNSize = collider.speed.dot(normal);
-      //     let erDSize = collider.speed.dot(delta);
-      //     let eeNSize = collidee.speed.dot(normal);
-      //     let eeDSize = collidee.speed.dot(delta);
-
-      //     collider.speed = new Vector(
-      //       normal.clone().multiply(erNSize)
-      //       .add(delta.clone().multiply(eeDSize)));
-      //     collidee.speed = new Vector(
-      //       normal.clone().multiply(eeNSize)
-      //       .add(delta.clone().multiply(erDSize)));
-      //   }
-      //   this.addPair(collidee.id, collider.id);
-      // }
       this.outOfBoundaries(collider, this.canvas);
     }
     // this.clearPairs();
