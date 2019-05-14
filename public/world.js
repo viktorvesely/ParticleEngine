@@ -116,7 +116,7 @@ World.prototype.FRICTION[World.prototype.DEFAULT_FRICTION] = 0.1;
 World.prototype.FRICTION[World.prototype.MODE.HOLLOW] = 0.04;
 
 
-window.tickBase = 60;
+window.tickBase = 45;
 window.debugTime = 0;
 window.nPopulation = 230;
 
