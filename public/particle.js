@@ -44,10 +44,15 @@ class Particle {
         let forceLength = deltaLength;
         if (forceLength > this.type.forceRadius) return;
     
-        this.act.push(particle);    
+        //this.act.push(particle);    
         const numer = 2.0 * Math.abs(deltaLength - 0.5 * (this.type.forceRadius + minR));
         const denom = this.type.forceRadius - minR;
-        let force = delta.clone().divide(deltaLength).multiply(this.type.maxForce * (1.0 - numer / denom)).multiply(behaviour.forceModificator);
+        let actForce = (this.type.maxForce * (1.0 - numer / denom)) * behaviour.forceModificator;
+        let force = delta.clone().divide(deltaLength).multiply(actForce);
+        if(actForce > 0.7) {
+          this.act.push(particle);
+        }
+        
         particle.speed.add(force);
       }
     });
@@ -72,7 +77,13 @@ class Particle {
     ctx.fillStyle = this.type.color;
     ctx.fill();
     
-    for ()
+    this.act.forEach(particle => {
+        ctx.beginPath();
+        ctx.moveTo(this.pos.x, this.pos.y);
+        ctx.lineTo(particle.pos.x, particle.pos.y);
+        ctx.strokeStyle = "#FFFFFF";
+        ctx.stroke();
+    });
   }
 
 }
