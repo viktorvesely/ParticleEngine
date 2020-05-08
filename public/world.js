@@ -55,6 +55,21 @@ class World {
     window.wrapWorld = !window.wrapWorld;
   }
 
+  count
+  
+  bigBangs(nParticle) {
+    let radius = -4;
+    let radiusStep = 4;
+    let currentCount = 0, maxCurrent = 0, count = 0;
+    while (count != nParticle) {
+      if (currentCount == maxCurrent) {
+        radius += radiusStep;
+
+      }
+      count++;
+    }
+  }
+  
   initPopulation(nParticles) {
     let finalPopulationSize = nParticles
     let lines = Math.ceil(nParticles / this.nParticlesPerLine);
