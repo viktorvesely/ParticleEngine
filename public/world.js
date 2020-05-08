@@ -62,20 +62,21 @@ class World {
   }
 
   countOnRadius(radius) {
-    let maxRadius = 6;
-    let offset = maxRadius + 2;
+    const maxRadius = 6;
+    const offset = maxRadius + 2;
     let circumference = 2 * Math.PI * radius; 
-    return Math.min(1, Math.floor(circumference / offset));
+    let count = Math.floor(circumference / offset);
+    return Math.max(1, count);
   }
   
   bigBang(nParticle) {
-    let radius = -4;
-    let radiusStep = 10;
+    const radiusStep = 20;
+    let radius = -radiusStep;
     let currentCount = 0, maxCurrent = 0, count = 0;
     while (count != nParticle) {
       if (currentCount == maxCurrent) {
         radius += radiusStep;
-        maxCurrent = this.countRadius(radius);
+        maxCurrent = this.countOnRadius(radius);
         currentCount = 0;
       }
       

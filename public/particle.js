@@ -8,6 +8,7 @@ class Particle {
     this.type  = behaviours.types[Math.floor(Math.random() * behaviours.types.length)];
     this.follow = null;
     this.permanent = false;
+    this.act = [];
     
   }
   
@@ -21,6 +22,7 @@ class Particle {
   }
 
   behave(particles, currentMode, MODE) {
+    this.act = [];
     particles.forEach(particle => {
       let behaviours = this.type.behaviour;
       if (this.id === particle.id) return;
@@ -41,7 +43,8 @@ class Particle {
         if (!behaviour) return;
         let forceLength = deltaLength;
         if (forceLength > this.type.forceRadius) return;
-
+    
+        this.act.push(particle);    
         const numer = 2.0 * Math.abs(deltaLength - 0.5 * (this.type.forceRadius + minR));
         const denom = this.type.forceRadius - minR;
         let force = delta.clone().divide(deltaLength).multiply(this.type.maxForce * (1.0 - numer / denom)).multiply(behaviour.forceModificator);
@@ -68,6 +71,8 @@ class Particle {
     ctx.arc(this.pos.x, this.pos.y, this.type.radius, 0, Math.PI * 2, false);
     ctx.fillStyle = this.type.color;
     ctx.fill();
+    
+    for ()
   }
 
 }
