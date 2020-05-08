@@ -24,6 +24,7 @@ class World {
     this.particles[0].goTo(new Vector(700, 400));
     
     this.collision = new CollisionManager(this.particles, this.canvas);
+    this.positions = [];
     
     this.interval = setInterval(function(context) {
       context.tick.call(context, context.ticks);
@@ -117,6 +118,7 @@ class World {
     
     this.collision.collide();
     
+    this.positions = [];
     this.particles.forEach(particle => {
       let friction = new Vector(particle.speed)
         .negative()
@@ -125,7 +127,11 @@ class World {
       particle.speed.add(friction);
       particle.behave(this.particles, this.mode, this.MODE);
       particle.pos.add(particle.speed);
+      this.positions.push([particle.pos.x],[particle.pos.y]);
     });
+    
+    var clusters = clusterfck.kmeans(this.positions, 3);
+    console.log(clusters)
   }
 
   draw() {

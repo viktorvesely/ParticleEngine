@@ -49,9 +49,6 @@ class Particle {
         const denom = this.type.forceRadius - minR;
         let actForce = (this.type.maxForce * (1.0 - numer / denom)) * behaviour.forceModificator;
         let force = delta.clone().divide(deltaLength).multiply(actForce);
-        if(actForce > 0.7) {
-          this.act.push(particle);
-        }
         
         particle.speed.add(force);
       }
