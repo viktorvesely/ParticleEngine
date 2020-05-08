@@ -25,6 +25,8 @@ class World {
     
     this.collision = new CollisionManager(this.particles, this.canvas);
     this.positions = [];
+    const xSegments = 10;
+    const ySegments = 3;
     this.clusters = [];
     
     this.interval = setInterval(function(context) {
@@ -131,7 +133,15 @@ class World {
       this.positions.push([particle.pos.x, particle.pos.y]);
     });
     
-    this.clusters = clusterfck.kmeans(this.positions, 40, "max");
+    /*this.clusters = clusterfck.kmeans(this.positions, 10);
+    let temp = [];
+    let current = [];
+    this.clusters.forEach(cluster => {
+        clusterfck.kmeans(this.positions, 30).forEach(c => {
+            temp.push(c);
+        });
+    });
+    this.clusters = temp;*/
   }
 
   draw() {
@@ -147,13 +157,12 @@ class World {
       
       this.clusters.forEach(cluster => {
         if (cluster.length < 10) return;
-          for (let i = 0; i < cluster.length - 1; i+= 2) {
-            let pA, pB;
-            pA = cluster[i];
-            pB = cluster[i + 1];
+          let pivot = cluster[0];
+          for (let i = 1; i < cluster.length; i++) {
+            let p = cluster[i];
             this.ctx.beginPath();
-            this.ctx.moveTo(pA[0], pA[1]);
-            this.ctx.lineTo(pB[0], pB[1]);
+            this.ctx.moveTo(pivot[0], pivot[1]);
+            this.ctx.lineTo(p[0], p[1]);
             this.ctx.strokeStyle = "#FFFFFF";
             this.ctx.stroke();
           }
