@@ -25,6 +25,7 @@ class World {
     
     this.collision = new CollisionManager(this.particles, this.canvas);
     this.positions = [];
+    this.clusters = [];
     
     this.interval = setInterval(function(context) {
       context.tick.call(context, context.ticks);
@@ -127,11 +128,10 @@ class World {
       particle.speed.add(friction);
       particle.behave(this.particles, this.mode, this.MODE);
       particle.pos.add(particle.speed);
-      this.positions.push([particle.pos.x],[particle.pos.y]);
+      this.positions.push([particle.pos.x, particle.pos.y]);
     });
     
-    var clusters = clusterfck.kmeans(this.positions, 3);
-    console.log(clusters)
+    this.clusters = clusterfck.kmeans(this.positions, 40, "max");
   }
 
   draw() {
@@ -143,6 +143,20 @@ class World {
       this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
       this.particles.forEach(particle => {
         particle.draw(this.ctx);
+      });
+      
+      this.clusters.forEach(cluster => {
+        if (cluster.length < 10) return;
+          for (let i = 0; i < cluster.length - 1; i+= 2) {
+            let pA, pB;
+            pA = cluster[i];
+            pB = cluster[i + 1];
+            this.ctx.beginPath();
+            this.ctx.moveTo(pA[0], pA[1]);
+            this.ctx.lineTo(pB[0], pB[1]);
+            this.ctx.strokeStyle = "#FFFFFF";
+            this.ctx.stroke();
+          }
       });
       this.draw();
     })

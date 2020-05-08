@@ -73,14 +73,7 @@ class Particle {
     ctx.arc(this.pos.x, this.pos.y, this.type.radius, 0, Math.PI * 2, false);
     ctx.fillStyle = this.type.color;
     ctx.fill();
-    
-    this.act.forEach(particle => {
-        ctx.beginPath();
-        ctx.moveTo(this.pos.x, this.pos.y);
-        ctx.lineTo(particle.pos.x, particle.pos.y);
-        ctx.strokeStyle = "#FFFFFF";
-        ctx.stroke();
-    });
+  
   }
 
 }
