@@ -3,6 +3,7 @@ class World {
   constructor(id, nParticles, mode="BEHAVIOUR", tickBase=60) {
     this.canvas = document.getElementById(id);
     this.lastCameraUpdate = 0;
+    this.mid = [];
     this.resize();
     
     this.ctx = this.canvas.getContext("2d");
@@ -18,7 +19,8 @@ class World {
     this.particles = [];
     this.switchMode(mode);
     window.wrapWorld = true;
-    this.initPopulation(nParticles);
+    //this.initPopulation(nParticles);
+    this.bigBang(nParticles);
     this.particles[0].goTo(new Vector(700, 400));
     
     this.collision = new CollisionManager(this.particles, this.canvas);
@@ -49,23 +51,45 @@ class World {
     let realSize = this.canvas.getBoundingClientRect();
     this.canvas.width = realSize.width;
     this.canvas.height = realSize.height;
+    this.mid = [
+      this.canvas.width / 2,
+      this.canvas.height / 2
+    ];
   }
   
   wrap() {
     window.wrapWorld = !window.wrapWorld;
   }
 
-  count
+  countOnRadius(radius) {
+    let maxRadius = 6;
+    let offset = maxRadius + 2;
+    let circumference = 2 * Math.PI * radius; 
+    return Math.min(1, Math.floor(circumference / offset));
+  }
   
-  bigBangs(nParticle) {
+  bigBang(nParticle) {
     let radius = -4;
-    let radiusStep = 4;
+    let radiusStep = 10;
     let currentCount = 0, maxCurrent = 0, count = 0;
     while (count != nParticle) {
       if (currentCount == maxCurrent) {
         radius += radiusStep;
-
+        maxCurrent = this.countRadius(radius);
+        currentCount = 0;
       }
+      
+      let currentAngle = Math.PI * 2 * (currentCount / maxCurrent);
+      let x, y;
+      
+      x = Math.cos(currentAngle) * radius + this.mid[0];
+      y = Math.sin(currentAngle) * radius + this.mid[1];
+      x = Math.round(x);
+      y = Math.round(y);
+      
+      this.particles.push(new Particle(new Vector(x , y), this.particles.length, this.behaviour));
+      
+      currentCount++;
       count++;
     }
   }
