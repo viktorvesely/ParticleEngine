@@ -82,5 +82,5 @@ Particle.prototype.maxRadius = 15;
 Particle.prototype.minRadius = 10;
 Particle.prototype.particlesOffset = 15;
 Particle.prototype.repelent_maxForce = 10;
-Particle.prototype.repelent_ = 2;
+Particle.prototype.repelent_ = 1;
 Particle.prototype.repelent_b = (Math.log10(Particle.prototype.repelent_maxForce) / Math.log10(Particle.prototype.repelent_));
