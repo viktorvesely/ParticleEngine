@@ -4,6 +4,7 @@
 // init project
 const express = require('express');
 const app = express();
+const PORT = process.env.PORT || 8080;
 
 // we've started you off with Express, 
 // but feel free to use whatever libs or frameworks you'd like through `package.json`.
@@ -17,5 +18,6 @@ app.get('/', function(request, response) {
 });
 
 // listen for requests :)
-const listener = app.listen(process.env.PORT, function() {
+const listener = app.listen(PORT, function() {
+  console.log(`Port ${PORT}`)
 });
