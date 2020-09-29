@@ -18,7 +18,7 @@ class Loop {
 
         this.sx = width / 2;
         this.sy = height / 2;
-        this.sv = 0.1;
+        this.sv = 0;
 
         this.board = new Board(boardSize[0], boardSize[1], width, height);
         this.gridOptimizer = new GridOptimizer(3, 3, this.width, this.height);
@@ -59,9 +59,16 @@ class Loop {
     tick(deltaTime) {
         if (this.pause) return;
         
+
         this.gridOptimizer.iterate(section => {
-            for(let i = 0; i < section.length; i++) {
+            for(let i = section.length - 1; i >= 0; i--) {
                 let particle = section[i];
+                
+                // This particle already had one turn this step
+                if (!particle.turn) {
+                    particle.turn = true;
+                    continue;
+                }
 
                 // Map boundaries
                 this.collision.outOfBoundaries(particle, this.width, this.height, this.wrapWorld);
@@ -78,11 +85,13 @@ class Loop {
                 // Scare
                 let scare = particle.pos.clone().subtract(new Vector(this.sx, this.sy));
                 let scareLength = scare.length();
-                scare.multiply((this.sv * deltaTime) / (scareLength * scareLength));
-                particle.addForce(scare);
+                if (scareLength !== 0) {
+                    scare.multiply((this.sv * deltaTime) / (scareLength * scareLength));
+                    particle.addForce(scare);
+                }
 
-                // Interact with others (symmetric interactions)
-                for (let z = i + 1; z < section.length; ++z) {
+                // Interact with others (symmetric interactions) 
+                for (let z = i - 1; z >= 0; --z) {
                     let other = section[z]
                     let delta = other.pos.clone().subtract(particle.pos);
                     let deltaLength = delta.length();
@@ -94,17 +103,26 @@ class Loop {
                 }
 
                 // Apply behaviour
-                particle.behave(this.board);
-
-                // Move
-                particle.move(deltaTime);
+                if (!particle.behave(deltaTime, this.board, this.register)) {
+                    let index = this.particles.indexOf(particle);
+                    this.particles.splice(index, 1);
+                    this.gridOptimizer.removeParticle(particle);
+                }
             }
         });
+
+        this.board.regrow();
+
       }
     
 
     pipe() {
-        postMessage(Msg(I_UPDATE, this.particles));
+        postMessage(Msg(I_UPDATE, {particles: this.particles, food: this.board.grid}));
+    }
+
+    register(particle) {
+        this.particles.push(particle);
+        this.gridOptimizer.update(particle);
     }
 
 
@@ -139,7 +157,7 @@ class Loop {
             x = Math.round(x);
             y = Math.round(y);
 
-            let particle = new Particle(new Vector(x, y), this.particles.length);
+            let particle = new Particle(new Vector(x, y));
             
             // Update grid Position
             this.gridOptimizer.update(particle);
@@ -179,5 +197,9 @@ onmessage = function (event) {
             loop.width = data.width;
             loop.height = data.height;
             loop.resize();
+            break;
+        case I_UPDATE_GRID:
+            loop.board.updateGrid(data);
+            break;
     }
 }

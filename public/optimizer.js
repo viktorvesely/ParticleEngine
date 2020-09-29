@@ -75,7 +75,12 @@ class GridOptimizer {
         if (gridX !== particle.gridX || gridY !== particle.gridY) {
             if (particle.gridX !== -1) {
                 this.removeParticle(particle);
+
+                if (particle.gridX < gridX || particle.gridY < gridY) {
+                    particle.turn = false;
+                }
             }
+
             particle.gridX = gridX;
             particle.gridY = gridY;
 

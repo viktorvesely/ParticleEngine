@@ -34,7 +34,8 @@ class World {
 
       switch (intent) {
         case I_UPDATE:
-          this.particles = data;
+          this.particles = data.particles;
+          this.board.grid = data.food;
           break;
       }
     };
@@ -131,8 +132,8 @@ class World {
 window.debugTime = 0;
 window.nPopulation = 230;
 
-World.prototype.boardwidth = 20;
-World.prototype.boardheight = 10;
+World.prototype.boardwidth = 10;
+World.prototype.boardheight = 7;
 
 let world = new World("world", window.nPopulation);
 

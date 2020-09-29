@@ -1,3 +1,6 @@
+const FOOD = 0;
+const CAP = 1;
+
 class Board {
     constructor(xResolution, yResolution, mapWidth=-1, mapHeight=-1) {
 
@@ -16,7 +19,7 @@ class Board {
         for (let y = 0; y < this.height; y++) {
             let temp = [];
             for(let x = 0; x < this.width; x++) {
-                temp.push(0);
+                temp.push([0, 0]);
             }
             this.grid.push(temp);
         }
@@ -41,6 +44,38 @@ class Board {
         return 1 / this.yTransform;
     }
 
+    eatFood(x, y, value) {
+        let ingested = 0;
+        let food = this.grid[y][x][FOOD];
+
+        if (value >= food) {
+            ingested = food;
+            food = 0;
+        } else {
+            food -= value;
+            ingested = value;
+        }
+
+        this.grid[y][x][FOOD] = food;
+
+        return ingested;
+    }
+
+    regrow() {
+        for (let y = 0; y < this.height; y++) {
+            for(let x = 0; x < this.width; x++) {
+                let site = this.grid[y][x];
+                let cap = site[CAP];
+                let food = site[FOOD];
+                
+                food = food * (cap + 1 - food) + 0.01
+                food = Math.min(cap, food);
+                
+                site[FOOD] = food;
+            }
+        }
+    }
+
     getGrid(x, y) {
         return this.grid[
             Math.floor(y * this.yTransform)
@@ -49,18 +84,31 @@ class Board {
         ];
     }
 
+    getMiddle(xGrid, yGrid) {
+        let w = this.cellWidth();
+        let h = this.cellHeight();
+        let x = xGrid * w + w / 2;
+        let y = yGrid * h + h / 2;
+        return [x, y];
+    }
+
     getPos(x, y) {
-        return this.grid[
-            Math.floor(x * this.xTransform), 
-            Math.floor(y * this.yTransform)
-        ];
+        let gridY = Math.floor(y * this.yTransform);
+        let gridX = Math.floor(x * this.xTransform);
+
+        if (gridX < 0) gridX = 0;
+        if (gridX > this.width - 1) gridX = this.width - 1;
+        if (gridY < 0) gridY = 0;
+        if (gridY > this.height - 1) gridY = this.height - 1;
+
+        return [gridX, gridY];
     }
 
     setGrid(x, y, pressure) {
-        let boardX = Math.floor(x * this.xTransform);
-        let boardY = Math.floor(y * this.yTransform);
+        let pos = this.getPos(x, y);
 
-        this.grid[boardY][boardX] = pressure;
+        let site = this.grid[pos[1]][pos[0]];
+        site[FOOD] = site[CAP] = pressure;
     }
 
     draw(ctx) {
@@ -70,7 +118,7 @@ class Board {
                 let h = this.cellHeight();
                 let xOr = w * x;
                 let yOr = h * y;
-                let value = this.grid[y][x];
+                let value = this.grid[y][x][FOOD];
 
                 ctx.beginPath();
                 ctx.fillStyle = `rgba(${value * 255}, 0, 0, 0.4)`;
