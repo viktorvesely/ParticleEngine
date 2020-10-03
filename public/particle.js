@@ -6,7 +6,7 @@ class Particle {
     this.speed = new Vector(0, 0);
     this.id = this.getRandomInt(0, 100000); 
     this.color = this.getRandomColor();
-    this.radius = this.getRandomInt(4, 6);
+    this.radius = this.getRandomInt(3, 7);
     this.turn = true;
 
     this.gridX = -1;
@@ -23,12 +23,7 @@ class Particle {
   }
 
   getRandomColor() {
-    let letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
+    return this.getRandomInt(0, 16777215);
   }
   
   addForce(force) {
@@ -68,7 +63,7 @@ class Particle {
 
         let food = grid[yg][xg][FOOD];
 
-        if (food > bestCell) {
+        if (food >= bestCell) {
           bestX = xg;
           bestY = yg;
           bestCell = food;
@@ -145,9 +140,11 @@ class Particle {
       )
     )
 
-    registerOffspring(offspring);
+    offspring.turn = false;
 
-    this.energy -= this.reproductionCost;
+    if (registerOffspring(offspring)) { 
+      this.energy -= this.reproductionCost;
+    }
   }
 
   hasGoal() {
@@ -168,18 +165,65 @@ class Particle {
 
 }
 
+class ParticleData {
+  constructor(floatBufferView) {
+      this.view = floatBufferView;
+      this.i = 1;
+  }
 
-Particle.prototype.vision = 3;
-Particle.prototype.initEnergy = 200;
-Particle.prototype.metabolism = 0.2;
-Particle.prototype.moveCost = 0.15;
-Particle.prototype.moveThreshold = 0.2;
-Particle.prototype.moveSpeed = 0.1;
-Particle.prototype.metabolismEffectiveness = 100;
-Particle.prototype.ingestion = 0.05;
-Particle.prototype.reproductionCost = 10;
-Particle.prototype.reproductionThreshold = 60;
-Particle.prototype.reproductionRadius = 5;
+  writeBuffer(x, y, color, radius) {
+    this.view[this.i++] = x;
+    this.view[this.i++] = y;
+    this.view[this.i++] = color;
+    this.view[this.i++] = radius;
+  }
+
+
+  readFloat() {
+    if (this.length() * 16 - 1 < this.i) {
+      console.error(this.i);
+    }
+    let arg = this.view[this.i++];
+    return arg;
+  }
+
+  readColor() {
+    let arg = this.view[this.i++];
+    arg = "#" + arg.toString("16");
+    return arg;
+  }
+
+  finishWrite() {
+    this.view[0] = (this.i - 1) / this.getSize();
+  }
+
+  length() {
+    return this.view[0];
+  }
+
+}
+
+ParticleData.prototype.getSize = function() {
+  return 4;
+}
+
+ParticleData.prototype.getByteSize = function() {
+  return ParticleData.prototype.getSize() * 4;
+}
+
+
+
+Particle.prototype.vision = 10;
+Particle.prototype.initEnergy = 20;
+Particle.prototype.metabolism = 0.14;
+Particle.prototype.moveCost = 0.03;
+Particle.prototype.moveThreshold = 0.1;
+Particle.prototype.moveSpeed = 0.2;
+Particle.prototype.metabolismEffectiveness = 4.5;
+Particle.prototype.ingestion = 0.2;
+Particle.prototype.reproductionCost = 90;
+Particle.prototype.reproductionThreshold = 150;
+Particle.prototype.reproductionRadius = 2;
 
 Particle.prototype.maxRadius = 15;
 Particle.prototype.minRadius = 10;

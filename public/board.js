@@ -61,6 +61,16 @@ class Board {
         return ingested;
     }
 
+    loadFromImage(image) {
+        for (let y = 0; y < this.height; y++) {
+            for(let x = 0; x < this.width; x++) {
+                let value = image[y][x];
+                this.grid[y][x] = [value, value];
+            }
+        }
+        return this;
+    } 
+
     regrow() {
         for (let y = 0; y < this.height; y++) {
             for(let x = 0; x < this.width; x++) {
@@ -68,7 +78,7 @@ class Board {
                 let cap = site[CAP];
                 let food = site[FOOD];
                 
-                food = food * (cap + 1 - food) + 0.01
+                food += (food * food) * 0.3 + 0.0009;
                 food = Math.min(cap, food);
                 
                 site[FOOD] = food;

@@ -2,22 +2,25 @@ class World {
 
   constructor(id, nParticles) {
     this.canvas = document.getElementById(id);
-    this.particles = [];
+    this.particles = null;
   
     this.board = new Board(
       this.boardwidth,
       this.boardheight
-    );
+    ).loadFromImage(IMAGE);
+
     
+    this.fadeWorld = false;
+
     this.resize();
 
     new Pressure(id, (x, y, value) => {
         if (value) {
-          this.board.setGrid(x, y, value);
-          this.simulation.postMessage(Msg(
-            I_UPDATE_GRID,
-            this.board.grid
-          ));
+          //this.board.setGrid(x, y, value);
+          //this.simulation.postMessage(Msg(
+          //  I_UPDATE_GRID,
+          //  this.board.grid
+          //));
         }
     });
     
@@ -29,15 +32,7 @@ class World {
     this.simulation = new Worker("simulation.js");
 
     this.simulation.onmessage = e => {
-      let intent = e.data.intent;
-      let data = e.data.data;
-
-      switch (intent) {
-        case I_UPDATE:
-          this.particles = data.particles;
-          this.board.grid = data.food;
-          break;
-      }
+      this.particles = new Float32Array(e.data);
     };
 
     this.simulation.postMessage(
@@ -49,6 +44,14 @@ class World {
           height: this.canvas.height,
           boardSize: [this.boardwidth, this.boardheight] 
         }
+      )
+    );
+
+    
+    this.simulation.postMessage(
+      Msg(
+        I_UPDATE_GRID,
+        this.board.grid
       )
     );
 
@@ -91,9 +94,9 @@ class World {
 
   showFPS (fps){
     this.ctx.fillStyle = "White";
-    this.ctx.font = "normal 16pt Arial";
+    this.ctx.font = "normal 12pt Arial";
 
-    this.ctx.fillText(Math.round(fps) + " fps", 10, 26);
+    this.ctx.fillText(Math.round(fps), 10, 26);
   }
   
 
@@ -102,27 +105,42 @@ class World {
     requestAnimationFrame(() => {
       let ctx = this.ctx;
       // Refresh frame
-      //this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height);
+      // this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height);
 
       // Draw background
-      ctx.beginPath();
-      ctx.fillStyle = "#060719";
-      ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+      if (!this.fadeWorld) {
+        ctx.beginPath();
+        ctx.fillStyle = "#000000";
+        ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+      }
 
       // Draw board 
-      this.board.draw(ctx);
-      //this.ctx.beginPath();
-      this.particles.forEach(particle => {
-        ctx.beginPath();
-        ctx.arc(particle.pos.x, particle.pos.y, particle.radius, 0, Math.PI * 2, false);
-        ctx.fillStyle = particle.color;
-        ctx.fill();
-      });
+      //this.board.draw(ctx);
+
+      
+      if (this.particles) {
+        let particleData = new ParticleData(this.particles);
+        let length = particleData.length();
+        for (var i = 0; i < length - 1; i++) {
+          let x = particleData.readFloat();
+          let y = particleData.readFloat();
+          let color = particleData.readColor();
+          let radius = particleData.readFloat();
+        
+          ctx.beginPath();
+          ctx.arc(x, y, radius, 0, Math.PI * 2, false);
+          ctx.fillStyle = color;
+          ctx.fill();
+        
+        }
+        
+        //this.ctx.fillText(length, 500, 26);
+      }
     
       let delta = (performance.now() - this.lastDraw)/1000;
       this.lastDraw = performance.now();
       let fps = 1/delta;
-      this.showFPS(fps);
+      //this.showFPS(fps);
       this.draw();
     })
   }
@@ -130,10 +148,10 @@ class World {
 
 
 window.debugTime = 0;
-window.nPopulation = 230;
+window.nPopulation = 30;
 
-World.prototype.boardwidth = 10;
-World.prototype.boardheight = 7;
+World.prototype.boardwidth = IMAGE[0].length;
+World.prototype.boardheight = IMAGE.length;
 
 let world = new World("world", window.nPopulation);
 
@@ -157,6 +175,6 @@ window.onkeyup = function(e) {
     window.nPopulation -= 20;
     world = new World("world", window.nPopulation, "BEHAVIOUR" , window.tickBase);
   } else if (key == 80) { // P
-    world.pause = !world.pause;
+    world.fadeWorld = !world.fadeWorld;
   }
 }

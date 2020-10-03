@@ -4,6 +4,8 @@ class GridOptimizer {
         this.height = Math.round(yResolution);
         this.grid = [];
 
+        this.delta = 0;
+
         this.xTransform = null;
         this.yTransform = null;
 
@@ -16,6 +18,14 @@ class GridOptimizer {
             }
             this.grid.push(temp);
         }
+    }
+
+    getParticleSize() {
+        let size = 0;
+        this.iterate(section => {
+            size += section.length;
+        });
+        return size;
     }
 
     resize(width, height) {
@@ -48,6 +58,7 @@ class GridOptimizer {
             let p = section[i];
             if (p.id === particle.id) {
                 section.splice(i, 1);
+                this.delta--;
                 return;
             } 
         }
@@ -85,6 +96,7 @@ class GridOptimizer {
             particle.gridY = gridY;
 
             this.grid[gridY][gridX].push(particle);
+            this.delta++;
         }
     }
 }
