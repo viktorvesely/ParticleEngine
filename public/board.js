@@ -130,6 +130,8 @@ class Board {
                 let yOr = h * y;
                 let value = this.grid[y][x][FOOD];
 
+                if (value === 0) continue;
+
                 ctx.beginPath();
                 ctx.fillStyle = `rgba(${value * 255}, 0, 0, 0.4)`;
                 ctx.fillRect(xOr, yOr, w, h);

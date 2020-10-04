@@ -1,7 +1,8 @@
 class World {
 
-  constructor(id, nParticles) {
+  constructor(id, nParticles, mode=null) {
     this.canvas = document.getElementById(id);
+    this.nParticles = nParticles;
     this.particles = null;
   
     this.board = new Board(
@@ -14,21 +15,31 @@ class World {
 
     this.resize();
 
-    new Pressure(id, (x, y, value) => {
-        if (value) {
-          //this.board.setGrid(x, y, value);
-          //this.simulation.postMessage(Msg(
-          //  I_UPDATE_GRID,
-          //  this.board.grid
-          //));
-        }
-    });
     
     this.ctx = this.canvas.getContext("2d", { alpha: false });
     this.shouldDraw = true;
     this.pause = false;
     this.lastDraw = performance.now();
+
+    this.simulation = null;
+    this.drawMode = false;
     
+    if (!mode) {
+      this.initializeWorker();
+    } else if (mode === "DRAW") {
+      new Pressure(id, (x, y, value) => {
+          if (value) {
+            this.board.setGrid(x, y, value);
+          }
+      });
+      this.drawMode = true;
+    }
+
+    this.draw();
+  }
+
+
+  initializeWorker() {
     this.simulation = new Worker("simulation.js");
 
     this.simulation.onmessage = e => {
@@ -39,7 +50,7 @@ class World {
       Msg(
         I_SIMULATION_START,
         {
-          nParticles: nParticles,
+          nParticles: this.nParticles,
           width: this.canvas.width,
           height: this.canvas.height,
           boardSize: [this.boardwidth, this.boardheight] 
@@ -54,8 +65,6 @@ class World {
         this.board.grid
       )
     );
-
-    this.draw();
   }
   
   
@@ -115,7 +124,9 @@ class World {
       }
 
       // Draw board 
-      //this.board.draw(ctx);
+      if (this.drawMode) {
+        this.board.draw(ctx);
+      }
 
       
       if (this.particles) {
@@ -165,16 +176,10 @@ window.onkeyup = function(e) {
   
    if (key == 87) { // W
     world.wrap();
-  } else if (key == 38) { // KEY_UP
-    world.destroy();
-    window.nPopulation += 20;
-    console.log(nPopulation);
-    world = new World("world", window.nPopulation , window.tickBase);
-  } else if (key == 40) { // KEY_DOWN
-    world.destroy();
-    window.nPopulation -= 20;
-    world = new World("world", window.nPopulation, "BEHAVIOUR" , window.tickBase);
   } else if (key == 80) { // P
     world.fadeWorld = !world.fadeWorld;
+  } else if (key == 68) { // D
+    world.destroy();
+    world = new World("world", window.nPopulation, "DRAW")
   }
 }
